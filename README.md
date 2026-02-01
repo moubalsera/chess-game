@@ -61,7 +61,7 @@ For now, you should see a console representation of the chessboard with Unicode 
 
 Here’s the current console board setup:
 
-![Chessboard Example](images/chessboard.png)
+![Chessboard Example](images/chessboard.jpg)
 
 ## Future Improvements
 
