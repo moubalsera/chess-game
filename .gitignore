@@ -1,7 +1,22 @@
-# Java compiled files
+# Compiled Java files
 *.class
 
-# IDEs
+# Packages
+*.jar
+*.war
+*.ear
+
+# IDE folders
 .vscode/
 .idea/
 *.iml
+
+# Logs
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
