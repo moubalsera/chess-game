@@ -58,5 +58,18 @@ public class Board {
         return board[row][col] != null && board[row][col].getColor()!= color;
     }
 
+    public void promotePawn(int row, int col, Piece.Type newType, Board board){
+        Piece pawn = board.getPiece(row, col);
+
+        if (pawn == null) return;
+        if (pawn.getPieceType() != Piece.Type.PAWN) return;
+
+        board.setPiece(row, col, new Piece(pawn.getColor(), newType));
+    }
+
+    public void setPiece(int row, int col, Piece piece){
+        board[row][col] = piece;
+    }
+
     
 }

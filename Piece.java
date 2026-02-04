@@ -38,27 +38,48 @@ public class Piece {
             //WHITE_PAWN_ROW = 6;
             //BLACK_PAWN_ROW = 1;
             //check bounds
-            if (toCol < 0 || toCol > 7 || toRow < 0 || toRow > 7){
+            if (toCol < 0 ||
+                toCol > 7 ||
+                toRow < 0 ||
+                toRow > 7){
                 return false;
             }
             //move forward
             int direction = (color == Color.BLACK) ? 1 : -1;
-            if ( toRow - fromRow == direction && toCol == fromCol && board.isEmpty(toRow, toCol)){
+            if ( toRow - fromRow == direction &&
+                toCol == fromCol &&
+                board.isEmpty(toRow, toCol)){
                 return true;
             }
             //starting move
             int startRow = (color == Color.BLACK) ? 1 : 6;
-            if (toCol == fromCol && toRow - fromRow == 2 * direction && fromRow == startRow && board.isEmpty(toRow, toCol) && board.isEmpty((fromRow + direction), toCol)){
+            if (toCol == fromCol &&
+                toRow - fromRow == 2 * direction &&
+                fromRow == startRow &&
+                board.isEmpty(toRow, toCol) &&
+                board.isEmpty((fromRow + direction), toCol)){
                 return true;
             }
 
             //diagonal capture
-            if (Math.abs(toCol - fromCol) == 1 && toRow - fromRow == direction && board.hasEnemyPiece(toRow, toCol, color)){
+            if (Math.abs(toCol - fromCol) == 1 &&
+                toRow - fromRow == direction &&
+                board.hasEnemyPiece(toRow, toCol, color)){
                 return true;
             }
 
             //Pawn promotion
+            
+            int finalRow = (color == Color.BLACK) ? 7 : 0; 
+            Piece piece = board.getPiece(finalRow, toCol);
+            if (piece != null &&
+                piece.getPieceType() == Piece.Type.PAWN &&
+                toRow == finalRow){
+                return true;
+            }
             //En passant capture
+
+            
 
             return false;
             
