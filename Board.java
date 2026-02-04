@@ -45,4 +45,18 @@ public class Board {
         board [toRow][toCol] = board[fromRow][fromCol];
         board[fromRow][fromCol] = null;
     }
+
+    public Piece getPiece(int row, int col){
+        return board[row][col];
+    }
+
+    public boolean isEmpty(int row, int col){
+        return board[row][col] == null;
+    }
+
+    public boolean hasEnemyPiece(int row, int col, Piece.Color color){
+        return board[row][col] != null && board[row][col].getColor()!= color;
+    }
+
+    
 }
