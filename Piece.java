@@ -10,7 +10,6 @@ public class Piece {
     public Piece(Color color, Type pieceType){
         this.color = color;
         this.pieceType = pieceType;
-
     }
 
     //methods
@@ -23,7 +22,6 @@ public class Piece {
             case ROOK: return color == Color.WHITE ? "\u2656" : "\u265C";
             case PAWN: return color == Color.WHITE ? "\u2659" : "\u265F";
             default: return "?";
-
         }
     }
     public Color getColor(){
@@ -34,30 +32,29 @@ public class Piece {
     }
     
     public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Board board){
-        if  (pieceType == Type.PAWN) {
-            //WHITE_PAWN_ROW = 6;
-            //BLACK_PAWN_ROW = 1;
-            //check bounds
-            if (toCol < 0 ||
-                toCol > 7 ||
-                toRow < 0 ||
-                toRow > 7){
-                return false;
+        //check bounds
+        if (toCol < 0 || toCol > 7 || toRow < 0 || toRow > 7){
+            return false;
             }
-            //move forward
+
+        if  (pieceType == Type.PAWN) {
+            
             int direction = (color == Color.BLACK) ? 1 : -1;
-            if ( toRow - fromRow == direction &&
+            int startRow = (color == Color.BLACK) ? 1 : 6;
+
+            //move forward
+            if (toRow - fromRow == direction &&
                 toCol == fromCol &&
                 board.isEmpty(toRow, toCol)){
                 return true;
             }
-            //starting move
-            int startRow = (color == Color.BLACK) ? 1 : 6;
+
+            //Two-square start
             if (toCol == fromCol &&
                 toRow - fromRow == 2 * direction &&
                 fromRow == startRow &&
                 board.isEmpty(toRow, toCol) &&
-                board.isEmpty((fromRow + direction), toCol)){
+                board.isEmpty((fromRow + direction), toCol)) {
                 return true;
             }
 
@@ -68,26 +65,41 @@ public class Piece {
                 return true;
             }
 
-            //Pawn promotion
-            
-            int finalRow = (color == Color.BLACK) ? 7 : 0; 
-            Piece piece = board.getPiece(finalRow, toCol);
-            if (piece != null &&
-                piece.getPieceType() == Piece.Type.PAWN &&
-                toRow == finalRow){
+            //En passant capture
+            if (Math.abs(toCol - fromCol) == 1 &&
+                toRow - fromRow == direction &&
+                board.isEnPassantSquare(toRow, toCol) &&
+                board.isEmpty(toRow, toCol)){
                 return true;
             }
-            //En passant capture
-
-            
 
             return false;
-            
+        }
 
-            }
-        return false;
+        if (pieceType == Type.KING) {
+
+            int rowDiff = Math.abs(toRow - fromRow);
+            int colDiff = Math.abs(toCol - fromCol);
             
+            if ((rowDiff <= 1 && colDiff <= 1) && !(rowDiff == 0 && colDiff == 0)){
+                return  board.isEmpty(toRow, toCol) ||
+                        board.hasEnemyPiece(toRow, toCol, color);
+            }
+            return false;
+            
+        }
+
+        if (pieceType == Type.BISHOP) {
+            //4 next coding session
+
+
+
+        }
+        return false;
+    
+    }
         
-    }
-    }
+    }    
+    
+    
 

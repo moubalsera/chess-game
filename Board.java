@@ -44,6 +44,16 @@ public class Board {
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol){
         board [toRow][toCol] = board[fromRow][fromCol];
         board[fromRow][fromCol] = null;
+
+        //en passant pawn movement
+        if(Math.abs(fromRow - toRow) == 2
+        ){ enPassantTargetRow = (fromRow + toRow) / 2;
+            enPassantTargetCol = toCol;
+
+        } else {
+            enPassantTargetRow = -1;
+            enPassantTargetCol = -1;
+        }
     }
 
     public Piece getPiece(int row, int col){
@@ -70,6 +80,14 @@ public class Board {
     public void setPiece(int row, int col, Piece piece){
         board[row][col] = piece;
     }
+
+     int enPassantTargetRow = -1;
+     int enPassantTargetCol = -1;
+    public boolean isEnPassantSquare(int row, int col){
+       return row == enPassantTargetRow && col == enPassantTargetCol;
+    }
+
+
 
     
 }
