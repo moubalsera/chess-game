@@ -90,11 +90,42 @@ public class Piece {
         }
 
         if (pieceType == Type.BISHOP) {
-            //4 next coding session
+            int colDiff = Math.abs(fromCol - toCol);
+            int rowDiff =Math.abs(fromRow - toRow);
+            if (colDiff == rowDiff && rowDiff != 0) {
+                
+                int rowDirection = (toRow - fromRow) / rowDiff;
+                int colDirection = (toCol - fromCol) / colDiff;
+                for (int i = 1; i < colDiff; i++){
+                    
+                    if (!board.isEmpty(fromRow + i*rowDirection, fromCol + i*colDirection)) {
+                        return false;
+                    }
+                }
+
+                Piece target = board.getPiece(toRow, toCol);
+                if (target == null ||
+                    target.getColor() != color ) {
+                        return true;
+                    }
+                
+                return false;
+            }
+
+            return false;
+
+        }
+        
+        if (pieceType == Type.ROOK) {
+            // to be implemented in the next session
+
+                }
+            
 
 
 
         }
+        
         return false;
     
     }
