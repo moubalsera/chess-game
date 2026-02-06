@@ -38,7 +38,36 @@ public class Piece {
             }
 
         if  (pieceType == Type.PAWN) {
-            
+            return isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
+        }
+
+        if (pieceType == Type.KING) {
+            return isValidKingMove(fromRow, fromCol, toRow, toCol, board);
+        }
+
+        if (pieceType == Type.BISHOP) {
+            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
+        }
+        
+        if (pieceType == Type.ROOK) {
+            return isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+                }
+        
+        if (pieceType == Type.QUEEN) {
+            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+            }
+        
+        if (pieceType == Type.KNIGHT) {
+
+            //CURRENTLY HERE
+        }
+
+        return false;
+
+        }
+    
+    private boolean isValidPawnMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
+
             int direction = (color == Color.BLACK) ? 1 : -1;
             int startRow = (color == Color.BLACK) ? 1 : 6;
 
@@ -74,9 +103,9 @@ public class Piece {
             }
 
             return false;
-        }
+    }
 
-        if (pieceType == Type.KING) {
+    private boolean isValidKingMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
 
             int rowDiff = Math.abs(toRow - fromRow);
             int colDiff = Math.abs(toCol - fromCol);
@@ -87,10 +116,11 @@ public class Piece {
             }
             return false;
             
-        }
+    }
 
-        if (pieceType == Type.BISHOP) {
-            int colDiff = Math.abs(fromCol - toCol);
+    private boolean isValidBishopMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
+
+        int colDiff = Math.abs(fromCol - toCol);
             int rowDiff =Math.abs(fromRow - toRow);
             if (colDiff == rowDiff && rowDiff != 0) {
                 
@@ -114,53 +144,45 @@ public class Piece {
 
             return false;
 
-        }
-        
-        if (pieceType == Type.ROOK) {
-            int rowDiff = Math.abs(fromRow - toRow);
-            int colDiff = Math.abs(fromCol - toCol);
-                if (fromCol == toCol && rowDiff > 0) {
-                    int rowDirection = (toRow - fromRow)/rowDiff;
-                    for (int i=1; i < rowDiff; i++){
-                        if (!(board.isEmpty(fromRow + i * rowDirection, toCol))) {
-                            return false;
-                        }
-                    }
-                }
+    }
+    
+    private boolean isValidRookMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
 
-                if (fromRow == toRow && colDiff > 0) {
-                    int colDirection = (toCol - fromCol)/colDiff;
-                    for (int i=1; i < colDiff; i++){
-                        if (!board.isEmpty(toRow, fromCol + i * colDirection)) {
-                            return false;
-                        }
-                    }
+        int rowDiff = Math.abs(fromRow - toRow);
+        int colDiff = Math.abs(fromCol - toCol);
 
-                }
-
-                if (fromRow != toRow && fromCol != toCol) {
+            if (fromRow != toRow && fromCol != toCol) {
                     return false;
                 }
-            
+
+            if (fromCol == toCol && rowDiff > 0) {
+                int rowDirection = (toRow - fromRow)/rowDiff;
+                for (int i=1; i < rowDiff; i++){
+                    if (!(board.isEmpty(fromRow + i * rowDirection, toCol))) {
+                        return false;
+                    }
+                }
+            }
+
+            if (fromRow == toRow && colDiff > 0) {
+                int colDirection = (toCol - fromCol)/colDiff;
+                for (int i=1; i < colDiff; i++){
+                    if (!board.isEmpty(toRow, fromCol + i * colDirection)) {
+                        return false;
+                    }
+                }
+
+            }
+
             Piece target = board.getPiece(toRow, toCol);
             if (target == null || target.getColor() != color){
                 return true;
             }
 
             return false;
-                }
-        
-        if (pieceType == Type.QUEEN) {
-            //Currently here
-
-
-        }
-
-        return false;
-
-        }
-          
     }
+    
+}
         
       
     
