@@ -117,20 +117,52 @@ public class Piece {
         }
         
         if (pieceType == Type.ROOK) {
-            // to be implemented in the next session
+            int rowDiff = Math.abs(fromRow - toRow);
+            int colDiff = Math.abs(fromCol - toCol);
+                if (fromCol == toCol && rowDiff > 0) {
+                    int rowDirection = (toRow - fromRow)/rowDiff;
+                    for (int i=1; i < rowDiff; i++){
+                        if (!(board.isEmpty(fromRow + i * rowDirection, toCol))) {
+                            return false;
+                        }
+                    }
+                }
+
+                if (fromRow == toRow && colDiff > 0) {
+                    int colDirection = (toCol - fromCol)/colDiff;
+                    for (int i=1; i < colDiff; i++){
+                        if (!board.isEmpty(toRow, fromCol + i * colDirection)) {
+                            return false;
+                        }
+                    }
 
                 }
-            
 
+                if (fromRow != toRow && fromCol != toCol) {
+                    return false;
+                }
+            
+            Piece target = board.getPiece(toRow, toCol);
+            if (target == null || target.getColor() != color){
+                return true;
+            }
+
+            return false;
+                }
+        
+        if (pieceType == Type.QUEEN) {
+            //Currently here
 
 
         }
-        
+
         return false;
-    
+
+        }
+          
     }
         
-    }    
+      
     
     
 
