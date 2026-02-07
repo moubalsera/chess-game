@@ -58,8 +58,8 @@ public class Piece {
             }
         
         if (pieceType == Type.KNIGHT) {
-
-            //CURRENTLY HERE
+            return isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
+            
         }
 
         return false;
@@ -111,8 +111,7 @@ public class Piece {
             int colDiff = Math.abs(toCol - fromCol);
             
             if ((rowDiff <= 1 && colDiff <= 1) && !(rowDiff == 0 && colDiff == 0)){
-                return  board.isEmpty(toRow, toCol) ||
-                        board.hasEnemyPiece(toRow, toCol, color);
+                return  isValidToSquare(toRow, toCol, board);
             }
             return false;
             
@@ -121,26 +120,24 @@ public class Piece {
     private boolean isValidBishopMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
 
         int colDiff = Math.abs(fromCol - toCol);
-            int rowDiff =Math.abs(fromRow - toRow);
-            if (colDiff == rowDiff && rowDiff != 0) {
+        int rowDiff =Math.abs(fromRow - toRow);
+        if (colDiff == rowDiff && rowDiff != 0) {
+            
+            int rowDirection = (toRow - fromRow) / rowDiff;
+            int colDirection = (toCol - fromCol) / colDiff;
+            for (int i = 1; i < colDiff; i++){
                 
-                int rowDirection = (toRow - fromRow) / rowDiff;
-                int colDirection = (toCol - fromCol) / colDiff;
-                for (int i = 1; i < colDiff; i++){
-                    
-                    if (!board.isEmpty(fromRow + i*rowDirection, fromCol + i*colDirection)) {
-                        return false;
-                    }
+                if (!board.isEmpty(fromRow + i*rowDirection, fromCol + i*colDirection)) {
+                    return false;
                 }
-
-                Piece target = board.getPiece(toRow, toCol);
-                if (target == null ||
-                    target.getColor() != color ) {
-                        return true;
-                    }
-                
-                return false;
             }
+
+            if (isValidToSquare(toRow, toCol, board)) {
+                return true;
+            }
+            
+            return false;
+        }
 
             return false;
 
@@ -174,14 +171,31 @@ public class Piece {
 
             }
 
-            Piece target = board.getPiece(toRow, toCol);
-            if (target == null || target.getColor() != color){
+            
+            if (isValidToSquare(toRow, toCol, board)) {
                 return true;
             }
+            
 
             return false;
     }
     
+    private boolean isValidKnightMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
+        int rowDiff = Math.abs(toRow - fromRow);
+        int colDiff = Math.abs(toCol - fromCol);
+        
+        if ( colDiff == 2 && rowDiff == 1 || colDiff == 1 && rowDiff == 2) {
+                return isValidToSquare(toRow, toCol, board);
+            }
+
+        return false;
+
+    }
+
+    private boolean isValidToSquare (int toRow, int toCol, Board board) {
+        Piece target = board.getPiece (toRow, toCol);
+        return target == null || target.getColor() != color;
+    }
 }
         
       

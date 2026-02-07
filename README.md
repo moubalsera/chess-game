@@ -17,6 +17,7 @@ This project models a chessboard and pieces using object-oriented principles, pr
 ## Project Structure
 ```
 ChessGame/
+├── Board.java
 ├── Chess.java
 ├── Piece.java
 ├── README.md

@@ -87,6 +87,10 @@ public class Board {
        return row == enPassantTargetRow && col == enPassantTargetCol;
     }
 
+    public boolean isKingInCheck () {
+        //CURRENTLY HERE
+    }
+
 
 
     
