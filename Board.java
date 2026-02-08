@@ -87,11 +87,33 @@ public class Board {
        return row == enPassantTargetRow && col == enPassantTargetCol;
     }
 
-    public boolean isKingInCheck () {
-        //CURRENTLY HERE
-    }
+    public boolean isKingInCheck (Piece.Color color, Board board) {
+        int kingRow = -1;
+        int kingCol = -1;
+        boolean foundKing = false;
+        for (int i = 0; i < BOARD_SIZE && !foundKing; i++){
+            for (int j = 0; j < BOARD_SIZE && !foundKing; j++){
+                Piece p = board.getPiece(i, j);
+                if (p != null && p.getPieceType() == Piece.Type.KING && p.getColor() == color){
+                     kingRow = i;
+                     kingCol = j;
+                     foundKing = true;
+                }
+            }   
+        }
 
+        if (kingRow == -1) return false;
 
-
+         for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                Piece p = board.getPiece(i, j);
+                if (p != null && p.getColor() != color && p.isValidMove(i, j, kingRow, kingCol, board)) {
+                    return true;
+                 }
+            }
+            }   
+        return false;
+        }
     
-}
+    
+    }
