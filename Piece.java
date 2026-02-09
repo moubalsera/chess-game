@@ -37,29 +37,13 @@ public class Piece {
             return false;
             }
 
-        if  (pieceType == Type.PAWN) {
-            return isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
-        }
-
-        if (pieceType == Type.KING) {
-            return isValidKingMove(fromRow, fromCol, toRow, toCol, board);
-        }
-
-        if (pieceType == Type.BISHOP) {
-            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
-        }
-        
-        if (pieceType == Type.ROOK) {
-            return isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-                }
-        
-        if (pieceType == Type.QUEEN) {
-            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-            }
-        
-        if (pieceType == Type.KNIGHT) {
-            return isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
-            
+        switch (pieceType){
+            case PAWN:  return isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
+            case KING:  return isValidKingMove(fromRow, fromCol, toRow, toCol, board);
+            case BISHOP:    return isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
+            case ROOK:  return isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+            case QUEEN: return isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+            case KNIGHT: return isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
         }
 
         return false;
