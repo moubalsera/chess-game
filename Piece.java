@@ -37,18 +37,34 @@ public class Piece {
             return false;
             }
 
+        boolean pieceMoveValid = false;
+
         switch (pieceType){
-            case PAWN:  return isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
-            case KING:  return isValidKingMove(fromRow, fromCol, toRow, toCol, board);
-            case BISHOP:    return isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
-            case ROOK:  return isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-            case QUEEN: return isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-            case KNIGHT: return isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
+            case PAWN:  pieceMoveValid = isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
+            case KING:  pieceMoveValid = isValidKingMove(fromRow, fromCol, toRow, toCol, board);
+            case BISHOP:    pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
+            case ROOK:  pieceMoveValid = isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+            case QUEEN: pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+            case KNIGHT: pieceMoveValid = isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
         }
 
-        return false;
+        if (!pieceMoveValid) return false;
+
+        Piece movingPiece = board.getPiece(fromRow, fromCol);
+        Piece capturedPiece = board.getPiece(toRow, toCol);
+
+        board.setPiece(toRow, toCol, movingPiece);
+        board.setPiece(fromRow, fromCol, null);
+
+        boolean kingInCheck = board.isKingInCheck(movingPiece.getColor(), board);
+
+        board.setPiece(fromRow, fromCol, movingPiece);
+        board.setPiece(toRow, toCol, capturedPiece);
+
+        return !kingInCheck;
 
         }
+
     
     private boolean isValidPawnMove(int fromRow, int fromCol, int toRow, int toCol, Board board) {
 
@@ -98,6 +114,8 @@ public class Piece {
                 return  isValidToSquare(toRow, toCol, board);
             }
             return false;
+
+            //I AM CURRENTLY HERE - CASTLE
             
     }
 
