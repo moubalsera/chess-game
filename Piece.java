@@ -5,11 +5,13 @@ public class Piece {
     //instance fields
     private final Color color;
     private final Type pieceType;
+    private boolean hasMoved;
   
     //constructor
     public Piece(Color color, Type pieceType){
         this.color = color;
         this.pieceType = pieceType;
+        this.hasMoved = false;
     }
 
     //methods
@@ -30,6 +32,14 @@ public class Piece {
     public Type getPieceType(){
         return pieceType;
     }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void markAsMoved() {
+        this.hasMoved = true;
+    }
     
     public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Board board){
         //check bounds
@@ -40,12 +50,24 @@ public class Piece {
         boolean pieceMoveValid = false;
 
         switch (pieceType){
-            case PAWN:  pieceMoveValid = isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
-            case KING:  pieceMoveValid = isValidKingMove(fromRow, fromCol, toRow, toCol, board);
-            case BISHOP:    pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
-            case ROOK:  pieceMoveValid = isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-            case QUEEN: pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
-            case KNIGHT: pieceMoveValid = isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
+            case PAWN:  
+                pieceMoveValid = isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
+                break;
+            case KING:  
+                pieceMoveValid = isValidKingMove(fromRow, fromCol, toRow, toCol, board);
+                break;
+            case BISHOP:    
+                pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
+                break;
+            case ROOK:  
+                pieceMoveValid = isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+                break;
+            case QUEEN: 
+                pieceMoveValid = isValidBishopMove(fromRow, fromCol, toRow, toCol, board) || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+                break;
+            case KNIGHT: 
+                pieceMoveValid = isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
+                break;
         }
 
         if (!pieceMoveValid) return false;
@@ -113,9 +135,20 @@ public class Piece {
             if ((rowDiff <= 1 && colDiff <= 1) && !(rowDiff == 0 && colDiff == 0)){
                 return  isValidToSquare(toRow, toCol, board);
             }
+
+            if (rowDiff == 0 && colDiff == 2) {
+                if (hasMoved()) return false;
+                if (board.isKingInCheck(color, board)) return false;
+                if (toCol > fromCol) {
+                    return canCastleKingSide(fromRow, fromCol, board);
+
+                } else {
+                    return canCastleQueenSide(fromRow, fromCol, board);
+                }
+            }
             return false;
 
-            //I AM CURRENTLY HERE - CASTLE
+          
             
     }
 
@@ -197,6 +230,70 @@ public class Piece {
     private boolean isValidToSquare (int toRow, int toCol, Board board) {
         Piece target = board.getPiece (toRow, toCol);
         return target == null || target.getColor() != color;
+    }
+
+    public boolean canAttackSquare(int fromRow, int fromCol, int toRow, int toCol, Board board){
+        switch (pieceType) {
+        case PAWN:
+            return isValidPawnMove(fromRow, fromCol, toRow, toCol, board);
+
+        case ROOK:
+            return isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+
+        case BISHOP:
+            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board);
+
+        case KNIGHT:
+            return isValidKnightMove(fromRow, fromCol, toRow, toCol, board);
+
+        case QUEEN:
+            return isValidBishopMove(fromRow, fromCol, toRow, toCol, board)
+                || isValidRookMove(fromRow, fromCol, toRow, toCol, board);
+
+        case KING:
+            
+            int rowDiff = Math.abs(toRow - fromRow);
+            int colDiff = Math.abs(toCol - fromCol);
+            return rowDiff <= 1 && colDiff <= 1;
+    }
+
+    return false;
+
+    }
+
+    public boolean canCastleKingSide(int kingRow, int kingCol, Board board) {
+        if (hasMoved) return false;
+
+        Piece rook = board.getPiece(kingRow, 7);
+        if (rook == null || rook.getPieceType() != Type.ROOK || rook.hasMoved()) return false;
+
+        for (int col = kingCol + 1; col < 7; col++) {
+            if (!board.isEmpty(kingRow, col)) return false;
+        }
+
+        for (int col = kingCol; col <= kingCol + 2; col++) {
+            if (board.squareUnderAttack(kingRow, col, color)) return false;
+        }
+
+        return true;
+    }
+
+    public boolean canCastleQueenSide(int kingRow, int kingCol, Board board) {
+        if (hasMoved) return false;
+
+        Piece rook = board.getPiece(kingRow, 0);
+        if (rook == null || rook.getPieceType() != Type.ROOK || rook.hasMoved()) return false;
+
+    
+        for (int col = kingCol - 1; col > 0; col--) {
+        if (!board.isEmpty(kingRow, col)) return false;
+        }
+
+        for (int col = kingCol; col >= kingCol - 2; col--) {
+        if (board.squareUnderAttack(kingRow, col, color)) return false;
+        }
+
+        return true;
     }
 }
         

@@ -42,18 +42,51 @@ public class Board {
     }
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol){
-        board [toRow][toCol] = board[fromRow][fromCol];
+        Piece movingPiece = board[fromRow][fromCol];
+        if (movingPiece == null) return;
+
+         if (movingPiece.getPieceType() == Piece.Type.KING &&
+             Math.abs(toCol - fromCol) == 2) {
+                if (toCol > fromCol) {
+
+                    Piece rook = board[fromRow][7];
+                    board[fromRow][5] = rook;
+                    board[fromRow][7] = null;
+                }
+
+                else {
+
+                    Piece rook = board[fromRow][0];
+                    board[fromRow][3] = rook;
+                    board[fromRow][0] = null;
+                }
+        }
+
+        board [toRow][toCol] = movingPiece;
         board[fromRow][fromCol] = null;
+        movingPiece.markAsMoved();
+        
 
         //en passant pawn movement
-        if(Math.abs(fromRow - toRow) == 2
-        ){ enPassantTargetRow = (fromRow + toRow) / 2;
+        if( movingPiece.getPieceType() == Piece.Type.PAWN && 
+            Math.abs(fromRow - toRow) == 2){ 
+            
+            enPassantTargetRow = (fromRow + toRow) / 2;
             enPassantTargetCol = toCol;
+
 
         } else {
             enPassantTargetRow = -1;
             enPassantTargetCol = -1;
         }
+
+        if (movingPiece.getPieceType() == Piece.Type.PAWN &&
+            Math.abs(fromCol - toCol) == 1 &&
+            getPiece(toRow, toCol) == null) {
+                int capturedPawnRow = (movingPiece.getColor() == Piece.Color.WHITE) ? toRow + 1 : toRow - 1;
+                board[capturedPawnRow][toCol] = null;
+            }
+        
     }
 
     public Piece getPiece(int row, int col){
@@ -85,6 +118,25 @@ public class Board {
      int enPassantTargetCol = -1;
     public boolean isEnPassantSquare(int row, int col){
        return row == enPassantTargetRow && col == enPassantTargetCol;
+    }
+
+    public boolean squareUnderAttack(int row, int col, Piece.Color color) {
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                
+                Piece p = getPiece(i,j);
+
+                if (p == null) continue;
+                
+                if (p.getColor() != color &&
+                    p.canAttackSquare(i, j, row, col, this)) {
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
     }
 
     public boolean isKingInCheck (Piece.Color color, Board board) {
