@@ -167,5 +167,37 @@ public class Board {
         return false;
         }
     
+    public boolean isCheckMate(Piece.Color color) {
+
+        if (!isKingInCheck(color, this)){
+            return false;
+        }
+
+        for (int fromRow = 0; fromRow < 8; fromRow++) {
+            for (int fromCol = 0; fromCol < 8; fromCol++) {
+                Piece piece = getPiece(fromRow, fromCol);
+
+                if (piece != null && piece.getColor() == color) {
+
+                    for (int toRow = 0; toRow < 8; toRow++) {
+                        for (int toCol = 0; toCol < 8; toCol++) {
+
+                            if (piece.isValidMove(fromRow, fromCol, toRow, toCol, this)) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isStaleMate(Color color) {
+
+        
+    }
+    
     
     }

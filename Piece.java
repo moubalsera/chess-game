@@ -1,5 +1,13 @@
 public class Piece {
-    public enum Color { WHITE, BLACK }
+    public enum Color { 
+        WHITE, 
+        BLACK;
+
+        public Color opponent() {
+            return this == WHITE ? BLACK : WHITE;
+        }
+
+     }
     public enum Type { KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN }
 
     //instance fields
