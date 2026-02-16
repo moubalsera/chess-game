@@ -20,3 +20,28 @@ Thumbs.db
 
 # Temporary files
 *.tmp
+
+# Maven build output
+/target/
+
+# Maven specific files
+dependency-reduced-pom.xml
+release.properties
+buildNumber.properties
+.mvn/timing.properties
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# VS Code Java
+.factorypath
