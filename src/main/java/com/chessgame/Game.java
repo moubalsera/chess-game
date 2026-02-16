@@ -1,4 +1,4 @@
-package src.main.java.com.chessgame;
+package com.chessgame;
 
 import java.util.Scanner;
 

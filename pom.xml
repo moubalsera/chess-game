@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Chess</mainClass>
+                            <mainClass>com.chessgame.ChessApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -51,7 +51,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>Chess</mainClass>
+                    <mainClass>com.chessgame.ChessApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
