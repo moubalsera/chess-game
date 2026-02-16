@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Board {
     //Constants
     private static final int BOARD_SIZE = 8;
@@ -41,7 +43,7 @@ public class Board {
 
     }
 
-    public void movePiece(int fromRow, int fromCol, int toRow, int toCol){
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol, Scanner scanner){
         Piece movingPiece = board[fromRow][fromCol];
         if (movingPiece == null) return;
 
@@ -87,6 +89,21 @@ public class Board {
                 board[capturedPawnRow][toCol] = null;
             }
         
+            if (movingPiece.getPieceType() == Piece.Type.PAWN) {
+                if ((movingPiece.getColor() == Piece.Color.WHITE && toRow == 0) || (movingPiece.getColor() == Piece.Color.BLACK && toRow == 7)) {
+                    System.out.println("Pawn promotion! Enter piece (Q/R/B/N: ");
+                    String choice = scanner.next().toUpperCase();
+                    Piece.Type newType = switch(choice) {
+                        case "Q" -> Piece.Type.QUEEN;
+                        case "R" -> Piece.Type.ROOK;
+                        case "B" -> Piece.Type.BISHOP;
+                        case "N" -> Piece.Type.KNIGHT;
+                        default -> Piece.Type.QUEEN;
+                    };
+                    promotePawn(toRow, toCol, newType, this);
+                }
+            }
+        
     }
 
     public Piece getPiece(int row, int col){
@@ -108,6 +125,7 @@ public class Board {
         if (pawn.getPieceType() != Piece.Type.PAWN) return;
 
         board.setPiece(row, col, new Piece(pawn.getColor(), newType));
+        board.getPiece(row, col).markAsMoved();
     }
 
     public void setPiece(int row, int col, Piece piece){
@@ -194,10 +212,45 @@ public class Board {
         return true;
     }
 
-    public boolean isStaleMate(Color color) {
+    public boolean isStaleMate(Piece.Color color) {
+        if (isKingInCheck(color, this)) {
+            return false;
+        }
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                Piece piece = getPiece(row, col);
 
+                if (piece == null || piece.getColor() != color) continue; 
+                    for (int toRow = 0; toRow < BOARD_SIZE; toRow++) {
+                        for (int toCol = 0; toCol < BOARD_SIZE; toCol++) {
+                            if (piece.isValidMove(row, col, toRow, toCol, this)) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
         
+    
+        return true;
     }
     
+    public int[] fromChessNotation(String pos) {
+        pos = pos.toLowerCase().trim();
+        if (pos.length() != 2) throw new IllegalArgumentException("Invalid notation: " + pos);
+
+        int col = pos.charAt(0) - 'a';
+        int row = 8 - Character.getNumericValue(pos.charAt(1));
+
+        if (row < 0 || row > 7 || col < 0 || col > 7) throw new IllegalArgumentException("Invalid notation: " + pos);
+        
+        return new int[]{row, col};
+    }
+
+    public String toChessNotation(int row, int col) {
+        char file = (char) ('a' + col);
+        int rank = 8 - row;
+        return "" + file + rank;
+    }
     
     }

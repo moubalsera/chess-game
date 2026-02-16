@@ -23,11 +23,17 @@ public class Game {
             break;
          }
 
-         System.out.println(currentPlayer + "'s turn. Enter move (fromRow fromCol toRow toCol):");
-         int fromRow = scanner.nextInt();
-         int fromCol = scanner.nextInt();
-         int toRow = scanner.nextInt();
-         int toCol = scanner.nextInt();
+         System.out.println(currentPlayer + "'s turn. Enter move (e.g., e2 e4):");
+         String fromPos = scanner.next();
+         String toPos = scanner.next();
+
+         int[] from = board.fromChessNotation(fromPos);
+         int[] to = board.fromChessNotation(toPos);
+
+         int fromRow = from[0];
+         int fromCol = from[1];
+         int toRow = to[0];
+         int toCol = to[1];
 
          Piece piece = board.getPiece(fromRow, fromCol);
          if (piece == null) {
@@ -42,7 +48,7 @@ public class Game {
          }
 
          if (piece.isValidMove(fromRow, fromCol, toRow, toCol, board)) {
-            board.movePiece(fromRow, fromCol, toRow, toCol);
+            board.movePiece(fromRow, fromCol, toRow, toCol, scanner);
             board.printBoard();
 
             currentPlayer = (currentPlayer == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;
